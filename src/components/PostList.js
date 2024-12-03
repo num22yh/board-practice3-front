@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { fetchPostList } from '../api/post';
+import { Link } from "react-router-dom";
 
 const PostList = () => {
     const [posts, setPosts] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const loadPosts = async () => {
             try {
                 const data = await fetchPostList();
-                setPosts(data); // 게시글 데이터를 상태에 저장
+                setPosts(data); 
             } catch (err) {
                 setError('게시글을 불러오는 중 오류가 발생했습니다.');
-            } finally {
-                setLoading(false);
             }
         };
         loadPosts();
@@ -45,7 +43,9 @@ const PostList = () => {
                         <tr key={post.id}>
                             <td>{index + 1}</td>
                             <td>{post.author}</td>
-                            <td>{post.title}</td>
+                            <td>
+                                <Link to={`/posts/${post.id}`}>{post.title}</Link>
+                            </td>
                             <td>{post.viewCount}</td>
                             <td>{new Date(post.createdAt).toLocaleString()}</td>
                             <td>{new Date(post.updatedAt).toLocaleString()}</td>
@@ -55,6 +55,9 @@ const PostList = () => {
                     ))}
                 </tbody>
             </table>
+            <button type="button" onClick={() => (window.location.href = "/create")}>
+            게시글 등록
+          </button>
         </div>
     );
 };
